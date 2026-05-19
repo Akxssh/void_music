@@ -14,17 +14,6 @@ class Add extends StatefulWidget {
 class _AddState extends State<Add> {
   List<String> _songs = [];
 
-  // void _showToast() {
-  //   showFToast(
-  //     context: context,
-  //     title: const Text("Button pressed!"),
-  //     description: const Text("just a description thats unnesecirily long."),
-  //     alignment: FToastAlignment.topCenter,
-  //     swipeToDismiss: const [AxisDirection.right, AxisDirection.left],
-  //     duration: const Duration(milliseconds: 700),
-  //   );
-  // }
-
   Future<void> _pickFiles() async {
     final result = await FilePicker.pickFiles(
       type: FileType.audio,
@@ -173,7 +162,12 @@ class _AddState extends State<Add> {
                     ? '${songName.substring(0, 35)}...'
                     : songName;
                 return Padding(
-                  padding: const EdgeInsets.all(2.0),
+                  padding: const EdgeInsets.only(
+                    top: 12.0,
+                    bottom: 5,
+                    left: 15,
+                    right: 15,
+                  ),
                   child: FCard(
                     title: Row(
                       children: [
