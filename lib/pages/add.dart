@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:forui/forui.dart';
@@ -13,16 +14,16 @@ class Add extends StatefulWidget {
 class _AddState extends State<Add> {
   List<String> _songs = [];
 
-  void _showToast() {
-    showFToast(
-      context: context,
-      title: const Text("Button pressed!"),
-      description: const Text("just a description thats unnesecirily long."),
-      alignment: FToastAlignment.topCenter,
-      swipeToDismiss: const [AxisDirection.right, AxisDirection.left],
-      duration: const Duration(milliseconds: 700),
-    );
-  }
+  // void _showToast() {
+  //   showFToast(
+  //     context: context,
+  //     title: const Text("Button pressed!"),
+  //     description: const Text("just a description thats unnesecirily long."),
+  //     alignment: FToastAlignment.topCenter,
+  //     swipeToDismiss: const [AxisDirection.right, AxisDirection.left],
+  //     duration: const Duration(milliseconds: 700),
+  //   );
+  // }
 
   Future<void> _pickFiles() async {
     final result = await FilePicker.pickFiles(
@@ -56,7 +57,7 @@ class _AddState extends State<Add> {
     });
   }
 
-  _showSongAddedToast(songName) {
+  void _showSongAddedToast(songName) {
     if (mounted) {
       showFToast(
         context: context,
@@ -163,11 +164,14 @@ class _AddState extends State<Add> {
               itemCount: _songs.length,
               itemBuilder: (BuildContext context, int index) {
                 final songPath = _songs[index];
-                final songName = songPath.split('/').last;
-                final displayName = songName.length > 25
-                    ? '${songName.substring(0, 25)}...'
-                    : songName;
+                final songName = p.basename(songPath);
 
+                final screenWidth = MediaQuery.of(context).size.width;
+                final usableWidth = screenWidth * 0.7;
+
+                final displayName = songName.length > 35
+                    ? '${songName.substring(0, 35)}...'
+                    : songName;
                 return Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: FCard(

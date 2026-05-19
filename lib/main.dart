@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:void_music/pages/add.dart';
 import 'package:void_music/pages/player.dart';
-import 'package:forui/forui.dart';
 
 void main() {
   runApp(MyApp());
