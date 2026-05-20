@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart';
@@ -144,51 +146,70 @@ class _AddState extends State<Add> {
           ),
         ),
       ),
-
       body: Column(
         children: [
-          // const Text("Add page"),
           Expanded(
-            child: ListView.builder(
-              itemCount: _songs.length,
-              itemBuilder: (BuildContext context, int index) {
-                final songPath = _songs[index];
-                final songName = p.basename(songPath);
+            child: Expanded(
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: 80),
+                children: [
+                  // Songs
+                  ..._songs.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final songPath = entry.value;
 
-                final screenWidth = MediaQuery.of(context).size.width;
-                final usableWidth = screenWidth * 0.7;
+                    final songName = p.basename(songPath);
 
-                final displayName = songName.length > 35
-                    ? '${songName.substring(0, 35)}...'
-                    : songName;
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    top: 12.0,
-                    bottom: 5,
-                    left: 15,
-                    right: 15,
+                    final displayName = songName.length > 35
+                        ? '${songName.substring(0, 35)}...'
+                        : songName;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        top: 2,
+                        bottom: 2,
+                        left: 5,
+                        right: 5,
+                      ),
+                      child: FCard(
+                        title: Row(
+                          children: [
+                            Text('${index + 1}: '),
+
+                            Expanded(
+                              child: Text(
+                                displayName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+
+                            FButton(
+                              onPress: () => _handleDeleteSongAtIndex(index),
+                              variant: .destructive,
+                              child: const Text("delete"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+
+                  // EXTRA STUFF AFTER LIST 👇
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FCard(child: const Text("End of playlist")),
                   ),
-                  child: FCard(
-                    title: Row(
-                      children: [
-                        Text('${index + 1}: '),
-                        Expanded(
-                          child: Text(
-                            displayName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        FButton(
-                          onPress: () => _handleDeleteSongAtIndex(index),
-                          variant: .destructive,
-                          child: const Text("delete"),
-                        ),
-                      ],
+
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FButton(
+                      onPress: _handleAddButton,
+                      child: const Text("Add More Songs"),
                     ),
                   ),
-                );
-              },
+                ],
+              ),
             ),
           ),
         ],
