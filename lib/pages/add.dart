@@ -175,7 +175,6 @@ class _AddState extends State<Add> {
                         title: Row(
                           children: [
                             Text('${index + 1}: '),
-
                             Expanded(
                               child: Text(
                                 displayName,
