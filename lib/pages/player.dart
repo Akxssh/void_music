@@ -12,6 +12,8 @@ class Player extends StatefulWidget {
 class _PlayerState extends State<Player> {
   final player = AudioPlayer();
   List<String> _songs = [];
+  String? _currentSong;
+
   Future<void> _loadFiles() async {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getStringList('songs');
@@ -20,15 +22,19 @@ class _PlayerState extends State<Player> {
     });
   }
 
-  Future<void> _playSong() async {
+  Future<void> _playSong(String songPath) async {
     try {
-      await player.setFilePath(
-        r"C:\Users\notno\Downloads\【OSHI NO KO】 Season 2 Non-Credit Opening GEMN “Fatale”.mp3",
-      );
-
+      String cleanPath = Uri.decodeFull(songPath);
+      await player.stop();
+      await player.setFilePath(cleanPath);
       await player.play();
-
-      debugPrint("playing");
+      setState(() => _currentSong = songPath);
+      if (mounted) {
+        showFToast(
+          context: context,
+          title: Text('Now playing: ${p.basenameWithoutExtension(songPath)}'),
+        );
+      }
     } catch (e) {
       debugPrint("ERROR: $e");
     }
@@ -38,24 +44,50 @@ class _PlayerState extends State<Player> {
   void initState() {
     super.initState();
     _loadFiles();
-    _playSong();
-    debugPrint("ran func");
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        itemCount: _songs.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FCard(
-              child: Text(p.basenameWithoutExtension(_songs[index])),
+    return ListView.builder(
+      itemCount: _songs.length,
+      itemBuilder: (context, index) {
+        final songName = p.basenameWithoutExtension(_songs[index]);
+        final displayName = songName.length > 35
+            ? '${songName.substring(0, 35)}...'
+            : songName;
+        final isPlaying = _currentSong == _songs[index];
+
+        return Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: FCard(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${index + 1}: $displayName',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: isPlaying
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
+                ),
+                FButton(
+                  onPress: () => _playSong(_songs[index]),
+                  child: Text(isPlaying ? "Playing" : "Play"),
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

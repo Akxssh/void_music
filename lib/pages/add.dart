@@ -158,7 +158,7 @@ class _AddState extends State<Add> {
                     final index = entry.key;
                     final songPath = entry.value;
 
-                    final songName = p.basename(songPath);
+                    final songName = p.basenameWithoutExtension(songPath);
 
                     final displayName = songName.length > 35
                         ? '${songName.substring(0, 35)}...'

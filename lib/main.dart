@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:void_music/pages/add.dart';
 import 'package:void_music/pages/player.dart';
+// import 'package:just_audio_mpv/just_audio_mpv.dart';
+// import 'package:just_audio_mpv/just_audio_mpv.dart'; // add this
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 
 void main() {
+  // JustAudioMediaKit.ensureInitialized(
+  //   linux: true,
+  //   windows: true,
+  //   android: false, // just_audio handles android natively
+  // );
   runApp(MyApp());
 }
 
