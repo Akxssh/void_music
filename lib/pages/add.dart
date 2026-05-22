@@ -134,11 +134,7 @@ class _AddState extends State<Add> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
-                    child: Icon(
-                      CupertinoIcons.plus,
-                      color: Colors.white,
-                      size: 16 * 1.5,
-                    ),
+                    child: Icon(Icons.add, color: Colors.white, size: 16 * 1.5),
                   ),
                 ],
               ),
@@ -195,18 +191,23 @@ class _AddState extends State<Add> {
                   }),
 
                   // EXTRA STUFF AFTER LIST 👇
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: FCard(child: const Text("End of playlist")),
-                  ),
+                  if (_songs.length > 5)
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: FCard(child: const Text("End of playlist")),
+                        ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: FButton(
-                      onPress: _handleAddButton,
-                      child: const Text("Add More Songs"),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: FButton(
+                            onPress: _handleAddButton,
+                            child: const Text("Add More Songs"),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
                 ],
               ),
             ),
