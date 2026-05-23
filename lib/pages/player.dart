@@ -12,7 +12,7 @@ class Player extends StatefulWidget {
 class _PlayerState extends State<Player> {
   final player = AudioPlayer();
   List<String> _songs = [];
-  String? _currentSong;
+  String? currentSong;
 
   Future<void> _loadFiles() async {
     final prefs = await SharedPreferences.getInstance();
@@ -22,13 +22,23 @@ class _PlayerState extends State<Player> {
     });
   }
 
+  Future<void> _togglePlayPause() async {
+    if (player.playing) {
+      await player.pause();
+    } else {
+      await player.play();
+    }
+
+    setState(() {});
+  }
+
   Future<void> _playSong(String songPath) async {
     try {
       final cleanPath = Uri.decodeFull(songPath);
       await player.stop();
       await player.setFilePath(cleanPath);
       await player.play();
-      setState(() => _currentSong = songPath);
+      setState(() => currentSong = songPath);
       if (mounted) {
         showFToast(
           context: context,
@@ -48,6 +58,7 @@ class _PlayerState extends State<Player> {
           context: context,
           title: Text('Filename contains illegal/incompatible characters'),
         );
+        _playNext();
       } else {
         showFToast(context: context, title: Text(err));
       }
@@ -55,8 +66,8 @@ class _PlayerState extends State<Player> {
   }
 
   void _playNext() {
-    if (_songs.isEmpty || _currentSong == null) return;
-    final currentIndex = _songs.indexOf(_currentSong!);
+    if (_songs.isEmpty || currentSong == null) return;
+    final currentIndex = _songs.indexOf(currentSong!);
     final nextIndex = (currentIndex + 1) % _songs.length; // loops back to start
     _playSong(_songs[nextIndex]);
   }
@@ -83,40 +94,48 @@ class _PlayerState extends State<Player> {
   Widget build(BuildContext context) {
     var scaffold = Scaffold(
       bottomSheet: BottomPlayer(),
-      body: ListView.builder(
-        itemCount: _songs.length,
-        itemBuilder: (context, index) {
-          final songName = p.basenameWithoutExtension(_songs[index]);
-          final displayName = songName.length > 35
-              ? '${songName.substring(0, 35)}...'
-              : songName;
-          final isPlaying = _currentSong == _songs[index];
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 90),
+        child: ListView.builder(
+          itemCount: _songs.length,
+          itemBuilder: (context, index) {
+            final songName = p.basenameWithoutExtension(_songs[index]);
+            final displayName = songName.length > 35
+                ? '${songName.substring(0, 35)}...'
+                : songName;
+            final isPlaying = currentSong == _songs[index];
 
-          return Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: FCard(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '${index + 1}: $displayName',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: isPlaying
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+            return Padding(
+              padding: const EdgeInsets.only(
+                top: 4.0,
+                left: 2,
+                right: 2,
+                bottom: 2,
+              ),
+              child: FCard(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${index + 1}: $displayName',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: isPlaying
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-                  FButton(
-                    onPress: () => _playSong(_songs[index]),
-                    child: Text(isPlaying ? "Playing" : "Play"),
-                  ),
-                ],
+                    FButton(
+                      onPress: () => _playSong(_songs[index]),
+                      child: Text(isPlaying ? "Playing" : "Play"),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
     return scaffold;
@@ -124,7 +143,7 @@ class _PlayerState extends State<Player> {
 }
 
 class BottomPlayer extends StatefulWidget {
-  BottomPlayer({Key? key}) : super(key: key);
+  const BottomPlayer({Key? key}) : super(key: key);
 
   @override
   _BottomPlayerState createState() => _BottomPlayerState();
@@ -136,7 +155,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
     return SizedBox(
       width: double.infinity,
       height: 60,
-      child: Center(child: null),
+      child: const Center(child: Text("No song playing")),
     );
   }
 }

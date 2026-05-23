@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
-import 'package:void_music/pages/add.dart';
+import 'package:void_music/pages/library.dart';
 import 'package:void_music/pages/player.dart';
 // import 'package:just_audio_mpv/just_audio_mpv.dart';
 // import 'package:just_audio_mpv/just_audio_mpv.dart'; // add this
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
+import 'package:void_music/pages/settings.dart';
 
-void main() {
-  // JustAudioMediaKit.ensureInitialized(
-  //   linux: true,
-  //   windows: true,
-  //   android: false, // just_audio handles android natively
-  // );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // final prefs = await SharedPreferences.getInstance();
+  // await prefs.clear(); // ← add this temporarily
+  JustAudioMediaKit.ensureInitialized(linux: true);
   runApp(MyApp());
 }
 
@@ -39,7 +39,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Widget> _pages = [Player(), Add()];
+  final List<Widget> _pages = [Player(), Add(), Settings()];
   var _currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -58,6 +58,10 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.library_add),
             label: "Library",
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Settings",
+          ),
         ],
       ),
       appBar: AppBar(
@@ -73,7 +77,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(width: 8),
             Text(
-              'void',
+              'cadence',
               style: TextStyle(
                 color: context.theme.colors.foreground,
                 fontSize: 20,
@@ -81,15 +85,15 @@ class _HomeState extends State<Home> {
                 letterSpacing: -0.5,
               ),
             ),
-            Text(
-              'music',
-              style: TextStyle(
-                color: context.theme.colors.mutedForeground,
-                fontSize: 20,
-                fontWeight: FontWeight.w300,
-                letterSpacing: -0.5,
-              ),
-            ),
+            // Text(
+            //   'music',
+            //   style: TextStyle(
+            //     color: context.theme.colors.mutedForeground,
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.w300,
+            //     letterSpacing: -0.5,
+            //   ),
+            // ),
           ],
         ),
         bottom: PreferredSize(

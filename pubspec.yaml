@@ -39,11 +39,12 @@ dependencies:
   forui_assets: ^0.21.0
   path: ^1.9.0
   just_audio: ^0.9.46
-  just_audio_background: ^0.0.1-beta.13
+  # just_audio_background: ^0.0.1-beta.13
   just_audio_media_kit: any
   media_kit_libs_linux: any
   media_kit_libs_windows_audio: any
-  just_audio_mpv: ^0.1.7
+  dio: ^5.9.2
+  # just_audio_mpv: ^0.1.7
 dev_dependencies:
   flutter_test:
     sdk: flutter

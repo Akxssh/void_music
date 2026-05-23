@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:forui/forui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// yes the file is called library and exports add but  its so i can work faster kay and refactoring is taking too long.
 class Add extends StatefulWidget {
   const Add({super.key});
   @override
@@ -71,44 +72,49 @@ class _AddState extends State<Add> {
   }
 
   void _handleDeleteSongAtIndex(int index) {
-    showFDialog(
-      context: context,
-      builder: (context, style, animation) => FDialog(
-        style: style,
-        animation: animation,
-        direction: .horizontal,
-        title: const Text('Are you absolutely sure?'),
-        body: const Text(
-          'This action cannot be undone. This will permanently delete your account and '
-          'remove your data from our servers.',
-        ),
-        actions: [
-          FButton(
-            size: .sm,
-            child: const Text('Continue'),
-            onPress: () {
-              setState(() {
-                _songs.removeAt(index);
-              });
-              _saveFiles();
-              Navigator.of(context).pop();
-            },
-          ),
-          FButton(
-            variant: .outline,
-            size: .sm,
-            child: const Text('Cancel'),
-            onPress: () {
-              showFToast(
-                context: context,
-                title: const Text("cancled deletion"),
-              );
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
+    // showFDialog(
+    //   context: context,
+    //   builder: (context, style, animation) => FDialog(
+    //     style: style,
+    //     animation: animation,
+    //     direction: .horizontal,
+    //     title: const Text('Are you absolutely sure?'),
+    //     body: const Text(
+    //       'This action cannot be undone. This will permanently delete your account and '
+    //       'remove your data from our servers.',
+    //     ),
+    //     actions: [
+    //       FButton(
+    //         size: .sm,
+    //         child: const Text('Continue'),
+    //         onPress: () {
+    //           setState(() {
+    //             _songs.removeAt(index);
+    //           });
+    //           _saveFiles();
+    //           Navigator.of(context).pop();
+    //         },
+    //       ),
+    //       FButton(
+    //         variant: .outline,
+    //         size: .sm,
+    //         child: const Text('Cancel'),
+    //         onPress: () {
+    //           showFToast(
+    //             context: context,
+    //             title: const Text("cancled deletion"),
+    //           );
+    //           Navigator.of(context).pop();
+    //         },
+    //       ),
+    //     ],
+    //   ),
+    // );
+
+    setState(() {
+      _songs.removeAt(index);
+    });
+    _saveFiles();
   }
 
   @override
